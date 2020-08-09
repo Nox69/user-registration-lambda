@@ -8,12 +8,12 @@ import java.util.UUID;
  */
 public class UserRegistrationUtil {
 
-    private UserRegistrationUtil() {
-        // Utility classes should not have public constructors (squid:S1118)
-    }
+	private UserRegistrationUtil() {
+		// Utility classes should not have public constructors (squid:S1118)
+	}
 
-    public static String generatePermamentAccessCode() {
-        return UUID.randomUUID().toString();
-    }
+	public static String generatePermamentAccessCode() {
+		return UUID.randomUUID().toString();
+	}
 
 }

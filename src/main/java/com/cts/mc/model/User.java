@@ -13,11 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 
-    private String firstName;
-    private String lastName;
-    private String mobileNo;
-    private String emailId;
-    private String dateOfBirth;
-    private String permamentAccessCode;
+	private String firstName;
+	private String lastName;
+	private String mobileNo;
+	private String emailId;
+	private String dateOfBirth;
+	private String permamentAccessCode;
 
 }

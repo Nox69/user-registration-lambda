@@ -15,22 +15,22 @@ import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
  */
 public class AwsClientConfiguration {
 
-    private AwsClientConfiguration() {
-        // Utility classes should not have public constructors (squid:S1118)
-    }
+	private AwsClientConfiguration() {
+		// Utility classes should not have public constructors (squid:S1118)
+	}
 
-    public static AWSCredentials credentials() {
-        return new BasicAWSCredentials(System.getenv("AWS_SERVICE_KEY"), System.getenv("AWS_SERVICE_SECRET"));
-    }
+	public static AWSCredentials credentials() {
+		return new BasicAWSCredentials(System.getenv("AWS_SERVICE_KEY"), System.getenv("AWS_SERVICE_SECRET"));
+	}
 
-    public static AmazonSQS sqsClient() {
-        return AmazonSQSClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials())).withRegion(Regions.US_EAST_2)
-                .build();
-    }
+	public static AmazonSQS sqsClient() {
+		return AmazonSQSClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials()))
+				.withRegion(Regions.US_EAST_2).build();
+	}
 
-    public static AmazonS3 s3Client() {
-        return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials())).withRegion(Regions.US_EAST_2)
-                .build();
-    }
+	public static AmazonS3 s3Client() {
+		return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials()))
+				.withRegion(Regions.US_EAST_2).build();
+	}
 
 }
