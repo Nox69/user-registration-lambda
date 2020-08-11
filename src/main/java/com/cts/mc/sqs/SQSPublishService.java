@@ -26,10 +26,10 @@ public class SQSPublishService {
 	private static final String EMAIL_ATTRIBUTE = "email";
 	private static final String TYPE_ATTRIBUTE = "type";
 	private static final String FIRST_NAME_ATTRIBUTE = "firstName";
-	private static final String LAST_NAME_ATTRIBUTE = "lastName";
+	private static final String PERMAMENT_ACCESS_CODE_ATTRIBUTE = "pac";
 	private static final String ATTRIBUTE_DATATYPE = "String";
 
-	private static final String EMAIL_TYPE = "register";
+	private static final String EMAIL_TYPE = "register-user";
 
 	private static Logger log = LoggerFactory.getLogger(SQSPublishService.class);
 	private static final String SQS_QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/960560987724/order-processing-queue";
@@ -39,7 +39,7 @@ public class SQSPublishService {
 		log.info("Creating the message Request to be published to Queue.");
 		SendMessageRequest messageRequest = new SendMessageRequest().withQueueUrl(SQS_QUEUE_URL)
 				.withMessageAttributes(fillMessageAttributes(user)).withDelaySeconds(5)
-				.withMessageBody(user.getPermamentAccessCode());
+				.withMessageBody(user.getFirstName());
 
 		// publish the message with SQS Client
 		sqsClient().sendMessage(messageRequest);
@@ -52,12 +52,12 @@ public class SQSPublishService {
 				.withDataType(ATTRIBUTE_DATATYPE);
 		MessageAttributeValue firstNameAttrVal = new MessageAttributeValue().withStringValue(user.getFirstName())
 				.withDataType(ATTRIBUTE_DATATYPE);
-		MessageAttributeValue lastNameAttrVal = new MessageAttributeValue().withStringValue(user.getLastName())
+		MessageAttributeValue pacAttrVal = new MessageAttributeValue().withStringValue(user.getPermamentAccessCode())
 				.withDataType(ATTRIBUTE_DATATYPE);
 
 		Object[][] messageAttributesMap = new Object[][] { { EMAIL_ATTRIBUTE, emailAttrVal },
 				{ TYPE_ATTRIBUTE, typeAttrVal }, { FIRST_NAME_ATTRIBUTE, firstNameAttrVal },
-				{ LAST_NAME_ATTRIBUTE, lastNameAttrVal } };
+				{ PERMAMENT_ACCESS_CODE_ATTRIBUTE, pacAttrVal } };
 
 		return Stream.of(messageAttributesMap)
 				.collect(Collectors.toMap(data -> (String) data[0], data -> (MessageAttributeValue) data[1]));

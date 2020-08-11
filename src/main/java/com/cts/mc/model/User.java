@@ -19,5 +19,6 @@ public class User {
 	private String emailId;
 	private String dateOfBirth;
 	private String permamentAccessCode;
+	private String orderCode;
 
 }

@@ -23,9 +23,9 @@ import com.google.gson.JsonSyntaxException;
  */
 public class UserRegistrationLambda implements RequestHandler<SNSEvent, String> {
 
-	private static final String SUCCESSFUL = "User is registered Successfully and Email is sent.";
-
+	private static final String SUCCESSFUL = "User is registered Successfully published to Queue with details.";
 	private static Logger log = LoggerFactory.getLogger(UserRegistrationLambda.class);
+	private static final String EMPTY = "";
 
 	@Override
 	public String handleRequest(SNSEvent request, Context context) {
@@ -38,11 +38,11 @@ public class UserRegistrationLambda implements RequestHandler<SNSEvent, String> 
 
 			// Parse the message and add the Access Code
 			User user = retrieveUser(userDetails);
-			log.info("Registering User  : [{}]", user.getEmailId());
+			log.info("Registering User : [{}]", user.getEmailId());
 			user.setPermamentAccessCode(generatePermamentAccessCode());
+			user.setOrderCode(EMPTY);
 
-			// Upload the new user to S3 Bucket
-			log.info("Uploading User to S3 Bucket");
+			// Upload the new user to S3 Bucket log.info("Uploading User to S3 Bucket");
 			if (!uploadToS3(user))
 				log.error("Unable to uploadFile in S3 Bucket");
 
@@ -53,15 +53,17 @@ public class UserRegistrationLambda implements RequestHandler<SNSEvent, String> 
 		} catch (AmazonServiceException e) {
 			log.error("Unable to process further due to sudden interruption");
 		} catch (Exception e) {
-			log.error("Exception Occurred while processing SNS Event : [{}] at [{}] with exception {}", userDetails,
-					LocalDateTime.now(), e.getMessage());
+			log.error("ExceptionOccurred while processing SNS Event : [{}] at [{}] with exception {}", userDetails,
+					LocalDateTime.now(), e);
 		}
+
 		return SUCCESSFUL;
 	}
 
 	private User retrieveUser(String userDetails) {
 		try {
 			Gson gson = new Gson();
+			log.info("URL Encoded JSON automatically Decoded : [{}]", userDetails);
 			return gson.fromJson(userDetails, User.class);
 		} catch (JsonSyntaxException e) {
 			log.error("Unable to Parse String to User Object.");
